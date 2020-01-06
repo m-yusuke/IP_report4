@@ -23,20 +23,31 @@ def output_to_window(img):
     pil_img = Image.fromarray(img_result.astype(np.uint8))
     pil_img.show()
 
-def main():
-    th1 = 90
-    th2 = 80
-    img = cv2.imread(args.target, 0)
-    tone = cv2.imread('./tone.png', 0)
-    tone = cv2.resize(tone, (img.shape[1], img.shape[0]))
-    edges = 255 - cv2.Canny(img, args.low, args.high)
-    blur = cv2.GaussianBlur(img,(5,5),0)
-    edges = cv2.Canny(blur, args.low, args.high)
-    #ret, th = cv2.threshold(img, 0, 255, cv2.THRESH_OTSU)
+def ternarization(img):
+    ret, _ = cv2.threshold(img, 0, 255, cv2.THRESH_OTSU)
+    th1 = ret - 20
+    th2 = ret - 30
     img[img > th1] = 255
     img[img < th2] = 0
     img[np.where((th2 <= img) & (img <= th1))] = 128
+    return img
+
+def edge_detect(img):
+    blur = cv2.GaussianBlur(img,(5,5),0)
+    edges = cv2.Canny(blur, args.low, args.high)
+    return edges
+
+def paste_tone(img):
+    tone = cv2.imread('./tone.png', 0)
+    tone = cv2.resize(tone, (img.shape[1], img.shape[0]))
     img[img == 128] = tone[img == 128]
+    return img
+
+def main():
+    img = cv2.imread(args.target, 0)
+    edges = edge_detect(img)
+    img = ternarization(img)
+    img = paste_tone(img)
     result = img - edges
     if args.debug:
         pass
