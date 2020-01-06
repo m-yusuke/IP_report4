@@ -11,8 +11,9 @@ def get_args():
     parser.add_argument('--save', '-s', action='store_true', default=False, help='出力結果を保存するするかどうか')
     parser.add_argument('--outname', '-o', default='./result.png', help='出力結果を保存する際のファイル名の指定')
     parser.add_argument('--debug', default=False, action='store_true', help='結果を出力するかどうか')
-    parser.add_argument('--low', default=70, type=int, help='下側しきい値')
-    parser.add_argument('--high', default=75, type=int, help='上側しきい値')
+    parser.add_argument('--low', default=70, type=int, help='エッジ下側しきい値(defauls:70)')
+    parser.add_argument('--high', default=75, type=int, help='エッジ上側しきい値(default:75)')
+    parser.add_argument('--bright', default=20, type=int, help='出力の明るさ(defaule:20)')
 
     args = parser.parse_args()
     return args
@@ -31,8 +32,8 @@ def ternarization(img):
     # 大津の二値化によりしきい値を計算
     ret, _ = cv2.threshold(img, 0, 255, cv2.THRESH_OTSU)
     # トーン貼り付け用に三値化するためにしきい値を分割
-    th1 = ret - 20
-    th2 = ret - 30
+    th1 = ret - args.bright
+    th2 = ret - (args.bright - 10)
     # 白, 黒, グレーへ三値化
     img[img > th1] = 255
     img[img < th2] = 0
