@@ -36,6 +36,7 @@ report
 
 # Portable Network Graphics
 *.png
+!tone.png
 
 # Animated Portable Network Graphics
 *.apng

@@ -1,6 +1,7 @@
 import cv2
 import argparse
 import numpy as np
+from PIL import Image
 
 
 def get_args():
@@ -18,12 +19,9 @@ def get_args():
 args = get_args()
 
 def output_to_window(img):
-    img = cv2.Canny(img, args.low, args.high)
-    cv2.namedWindow("pic", cv2.WINDOW_NORMAL)
-
-    cv2.imshow("pic", img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    img_result = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    pil_img = Image.fromarray(img_result.astype(np.uint8))
+    pil_img.show()
 
 def main():
     th1 = 90
