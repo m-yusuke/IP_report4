@@ -33,7 +33,7 @@ def ternarization(img):
     ret, _ = cv2.threshold(img, 0, 255, cv2.THRESH_OTSU)
     # トーン貼り付け用に三値化するためにしきい値を分割
     th1 = ret - args.bright
-    th2 = ret - (args.bright - 10)
+    th2 = ret - (args.bright + 10)
     # 白, 黒, グレーへ三値化
     img[img > th1] = 255
     img[img < th2] = 0
